@@ -22,6 +22,7 @@ def get_credentials(env_var:str=None, domain:str=None) -> tuple:
     from getpass import getpass,getuser
     from os import getenv
 
+    # try, except guarantees manual input if other methods fail
     try:
 
         if env_var != None:
@@ -50,9 +51,12 @@ def prompt_choice(options:Union[dict, list, tuple]) -> tuple:
     '''
 
     # convert lists & tuples to dictionary
-    if type(options) == dict: pass
-    if type(options) == list or type(options) == tuple:
+    if   type(options) == dict: pass
+    elif type(options) == list or 
+         type(options) == tuple:
         options = {i+1:item for i,item in enumerate(options)}
+    else:
+        raise Exception('Options must be of type: dict, list, tuple.')
 
     # convert all keys,values to strings
     options = {str(key):str(value) for key,value in options.items()}
@@ -65,6 +69,7 @@ def prompt_choice(options:Union[dict, list, tuple]) -> tuple:
         
         print('----------------')
         
+        # input() waits until user presses 'enter'
         choice = str(input())
         
         if choice in options.keys(): break
