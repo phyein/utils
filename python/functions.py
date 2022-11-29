@@ -1,8 +1,8 @@
 from typing import Union
 
-def get_credentials(env_var:str=None, domain:str=None) -> dict:
+def get_credentials(env_var:str=None, domain:str=None) -> tuple:
     '''
-    Gets user credentials via the following methods:
+    Get user credentials via the following methods:
 
     ENVIRONMENT VARIABLE (RECOMMENDED)
         get_credentials(env_var='VARIABLE') reads an environment variable.
@@ -36,22 +36,13 @@ def get_credentials(env_var:str=None, domain:str=None) -> dict:
             key = getpass('Password for current user: ')
 
         else: raise Exception()
-        
+
     except:
         # MANUAL AUTHENTICATION
         uid = input('Username: ')
         key = getpass('Password: ')
 
-    credentials = {
-        'username': uid,
-        'user': uid,
-        'uid': uid,
-        'password': key,
-        'pass': key,
-        'key': key,
-        }
-    
-    return credentials
+    return uid,key
 
 def prompt_choice(options:Union[dict, list, tuple]) -> tuple:
     '''
