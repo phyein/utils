@@ -43,20 +43,19 @@ def get_credentials(env_var:str=None, domain:str=None) -> tuple:
         uid = input('Username: ')
         key = getpass('Password: ')
 
-    return uid,key
+    return (uid, key)
 
-def prompt_choice(options:Union[dict, list, tuple]) -> tuple:
+def prompt_choice(options:Union[dict, list, set, tuple]) -> tuple:
     '''
     Presents multiple choice prompt to user.
     '''
 
-    # convert lists & tuples to dictionary
-    if   type(options) == dict: pass
-    elif type(options) == list or 
-         type(options) == tuple:
+    # convert options to dictionary type
+    if   type(options) in ['dict']: pass
+    elif type(options) in ['list', 'set', 'tuple']:
         options = {i+1:item for i,item in enumerate(options)}
     else:
-        raise Exception('Options must be of type: dict, list, tuple.')
+        raise Exception('Options type must be of: dict, list, set, tuple.')
 
     # convert all keys,values to strings
     options = {str(key):str(value) for key,value in options.items()}
