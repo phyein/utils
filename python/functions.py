@@ -25,18 +25,18 @@ def get_credentials(env_var:str=None, domain:str=None) -> tuple:
     # try, except guarantees manual input if other methods fail
     try:
 
-        if env_var != None:
+        if env_var:
             # ENVIRONMENT VARIABLE AUTHENTICATION
             credentials = literal_eval(getenv(env_var))
             uid = credentials['username']
             key = credentials['password']
 
-        elif domain != None:
+        elif domain:
             # DOMAIN AUTHENTICATION
             uid = domain + getuser()
             key = getpass('Password for current user: ')
 
-        else: raise Exception()
+        else: raise Exception('Defaulting to manual authentication.')
 
     except:
         # MANUAL AUTHENTICATION
@@ -78,6 +78,7 @@ def prompt_choice(options:Union[dict, list, set, tuple]) -> tuple:
     return (choice, options[choice])
 
 def indicate_progress(i:int, total:int) -> None:
+    '''Put this inside of an iterator.'''
     print(f'{100*i//total}%', end='\r')
 
 class color:
