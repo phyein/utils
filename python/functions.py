@@ -1,4 +1,7 @@
+import logging as log
 from typing import Union
+
+log.basicConfig(format='%(asctime)s %(levelname)s: %(message)s')
 
 def get_credentials(env_var:str=None, domain:str=None) -> tuple:
     '''
@@ -36,7 +39,9 @@ def get_credentials(env_var:str=None, domain:str=None) -> tuple:
             uid = domain + getuser()
             key = getpass('Password for current user: ')
 
-        else: raise Exception('Defaulting to manual authentication.')
+        else:
+            log.info('Defaulting to manual authentication.')
+            raise Exception()
 
     except:
         # MANUAL AUTHENTICATION
@@ -45,19 +50,35 @@ def get_credentials(env_var:str=None, domain:str=None) -> tuple:
 
     return (uid, key)
 
+def to_dict(
+    series:Union[dict, float, int, list, set, tuple], 
+    length:int=None
+    ) -> dict:
+    '''
+    Convert series of values to type dict.
+    If series is instance of int or float, length must be specified.
+    '''
+    
+    if   isinstance(series, (dict)):
+        return series
+    
+    elif isinstance(series, (int, float)):
+        # interpret input as mean of series
+        return {i+1:series for i in range(length)}
+    
+    elif isinstance(series, (list, set, tuple)):
+        return {i+1:item for i,item in enumerate(series)}
+    
+    else:
+        raise Exception(f'Invalid type: {type(series)}')
+
 def prompt_choice(options:Union[dict, list, set, tuple]) -> tuple:
     '''
     Presents multiple choice prompt to user.
     '''
 
-    # convert options to dictionary type
-    if   type(options) in ['dict']: pass
-    elif type(options) in ['list', 'set', 'tuple']:
-        options = {i+1:item for i,item in enumerate(options)}
-    else:
-        raise Exception('Options type must be of: dict, list, set, tuple.')
-
-    # convert all keys,values to strings
+    # convert all keys,values to dictionary of strings
+    options = to_dict(options)
     options = {str(key):str(value) for key,value in options.items()}
 
     # prompt user
@@ -79,6 +100,7 @@ def prompt_choice(options:Union[dict, list, set, tuple]) -> tuple:
 
 def indicate_progress(i:int, total:int) -> None:
     '''Put this inside of an iterator.'''
+    
     print(f'{100*i//total}%', end='\r')
 
 class color:
