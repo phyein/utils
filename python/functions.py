@@ -1,4 +1,5 @@
 import logging as log
+import pandas as pd
 from typing import Union
 
 log.basicConfig(format='%(asctime)s %(levelname)s: %(message)s')
@@ -33,11 +34,13 @@ def get_credentials(env_var:str=None, domain:str=None) -> tuple:
             credentials = literal_eval(getenv(env_var))
             uid = credentials['username']
             key = credentials['password']
+            log.info('Credentials from environment variable.')
 
         elif domain:
             # DOMAIN AUTHENTICATION
             uid = domain + getuser()
             key = getpass('Password for current user: ')
+            log.info('Credentials from domain.')
 
         else:
             log.info('Defaulting to manual authentication.')
@@ -47,6 +50,7 @@ def get_credentials(env_var:str=None, domain:str=None) -> tuple:
         # MANUAL AUTHENTICATION
         uid = input('Username: ')
         key = getpass('Password: ')
+        log.info('Credentials from manual entry.')
 
     return (uid, key)
 
@@ -102,6 +106,17 @@ def indicate_progress(i:int, total:int) -> None:
     '''Put this inside of an iterator.'''
     
     print(f'{100*i//total}%', end='\r')
+
+def infer_dtypes(table: pd.DataFrame) -> pd.DataFrame:
+    '''
+    Infers data types for dataframes whose values consist only of strings.
+    '''
+    
+    return table \
+            .replace(to_replace('true', 'True'), value=True) \
+            .replace(to_replace('false', 'False'), value=False) \
+            .apply(pd.to_numeric, errors='ignore') \
+            .convert_dtypes()
 
 class color:
     '''
