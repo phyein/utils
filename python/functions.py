@@ -4,14 +4,14 @@ from typing import Union
 
 log.basicConfig(format='%(asctime)s %(levelname)s: %(message)s')
 
-def get_credentials(env_var:str=None, domain:str=None) -> tuple:
+def get_credentials(env_var: str = None, domain: str = None) -> tuple:
     '''
     Get user credentials via the following methods:
 
     ENVIRONMENT VARIABLE (RECOMMENDED)
         get_credentials(env_var='VARIABLE') reads an environment variable.
         The variable must be formatted as a Python dictionary:
-            "{'username':'YOUR_USERNAME', 'password':'YOUR_PASSWORD'}"
+            "{'username': 'YOUR_USERNAME', 'password': 'YOUR_PASSWORD'}"
 
     DOMAIN AUTHENTICATION
         get_credentials(domain='DOMAIN') to get username from system.
@@ -23,7 +23,7 @@ def get_credentials(env_var:str=None, domain:str=None) -> tuple:
     '''
 
     from ast import literal_eval
-    from getpass import getpass,getuser
+    from getpass import getpass, getuser
     from os import getenv
 
     # try, except guarantees manual input if other methods fail
@@ -55,8 +55,8 @@ def get_credentials(env_var:str=None, domain:str=None) -> tuple:
     return (uid, key)
 
 def to_dict(
-    series:Union[dict, float, int, list, set, tuple], 
-    length:int=None
+    series: Union[dict, float, int, list, set, tuple], 
+    length: int=None
     ) -> dict:
     '''
     Convert series of values to type dict.
@@ -68,28 +68,28 @@ def to_dict(
     
     elif isinstance(series, (int, float)):
         # interpret input as mean of series
-        return {i+1:series for i in range(length)}
+        return {i + 1: series for i in range(length)}
     
     elif isinstance(series, (list, set, tuple)):
-        return {i+1:item for i,item in enumerate(series)}
+        return {i + 1: item for i, item in enumerate(series)}
     
     else:
         raise Exception(f'Invalid type: {type(series)}')
 
-def prompt_choice(options:Union[dict, list, set, tuple]) -> tuple:
+def prompt_choice(options: Union[dict, list, set, tuple]) -> tuple:
     '''
     Presents multiple choice prompt to user.
     '''
 
     # convert all keys,values to dictionary of strings
     options = to_dict(options)
-    options = {str(key):str(value) for key,value in options.items()}
+    options = {str(key): str(value) for key, value in options.items()}
 
     # prompt user
     while True:
-        print('Select one: ')
-        for key,value in options.items():
-            print(key + '. ' + value)
+        print('Selection: ')
+        for key, value in options.items():
+            print(f'{key}. {value}')
         
         print('----------------')
         
@@ -102,10 +102,10 @@ def prompt_choice(options:Union[dict, list, set, tuple]) -> tuple:
 
     return (choice, options[choice])
 
-def indicate_progress(i:int, total:int) -> None:
+def indicate_progress(i: int, total: int) -> None:
     '''Put this inside of an iterator.'''
     
-    print(f'{100*i//total}%', end='\r')
+    print(f'{100 * i // total}%', end='\r')
 
 def infer_dtypes(table: pd.DataFrame) -> pd.DataFrame:
     '''
