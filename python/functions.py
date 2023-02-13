@@ -2,7 +2,15 @@ import logging as log
 import pandas as pd
 from typing import Union
 
-log.basicConfig(format='%(asctime)s %(levelname)s: %(message)s')
+# setup logging from JSON configuration file
+# I know a YAML or other config file type would be better, 
+# but this dosen't require 3rd party libraries.
+import logging as log
+import logging.config
+from json import loadh
+with open('log_config.json', mode='rt') as logfig:
+    log_config = load(logfig)
+logging.config.dictConfig(log_config)
 
 def get_credentials(env_var: str = None) -> tuple:
     '''
