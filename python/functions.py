@@ -12,6 +12,11 @@ with open('log_config.json', mode='rt') as logfig:
     log_config = load(logfig)
 logging.config.dictConfig(log_config)
 
+def main():
+    '''Ensure module runs when called directly but not when imported.'''
+    pass
+if __name__ == '__main__': main()
+
 def get_credentials(env_var: str = None) -> tuple:
     '''
     Get user credentials via the following methods:
