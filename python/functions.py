@@ -2,18 +2,16 @@ import logging as log
 import pandas as pd
 from typing import Union
 
-# setup logging from JSON configuration file
-# I know a YAML or other config file type would be better, 
-# but this dosen't require 3rd party libraries.
+# setup logging
 import logging as log
 import logging.config
-from json import loadh
-with open('log_config.json', mode='rt') as logfig:
-    log_config = load(logfig)
-logging.config.dictConfig(log_config)
+import tomllib as toml
+with open('log_config.toml', mode='rb') as logfile:
+    log_cfg = toml.load(logfile)
+logging.config.dictConfig(log_cfg)
 
 def main():
-    '''Ensure module runs when called directly but not when imported.'''
+    '''Main loop. Execute for direct module call but not import.'''
     pass
 if __name__ == '__main__': main()
 
