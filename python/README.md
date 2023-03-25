@@ -20,6 +20,7 @@ conda config --set channel_priority strict
 ```bash
 conda create --name $NAME python=$VERSION
 conda remove --name $NAME --all
+conda install python=$VERSION
 ```
 
 ## Install Local Packages
