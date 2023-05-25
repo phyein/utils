@@ -1,4 +1,4 @@
-# snippets
+# utils
 Collection of code snippets deemed plausibly useful for future projects.
 
 ## Git
