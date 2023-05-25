@@ -31,7 +31,7 @@ fromaddr = 'monitoring@domain.com'
 toaddrs = ['dev@domain.com', 'qa@domain.com']
 subject = 'Critical error with application name'
 
-[loggers.""]
+[loggers.'']
 handlers = ['console', 'info_rfh' ]
 level = 'WARNING'
 propagate = true
