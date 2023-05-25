@@ -1,12 +1,5 @@
 # Python
 
-## Compiling Binary Executables
-
-```bash
-pip install pyinstaller
-pyinstaller --onefile $FILE
-```
-
 ## Conda
 
 ###### Installation
@@ -26,4 +19,11 @@ conda install python=$VERSION
 ## Install Local Packages
 ```bash
 pip install --no-build-isolation --no-deps --editable $PKG_ROOT_DIR
+```
+
+## Compiling Binary Executables
+
+```bash
+pip install pyinstaller
+pyinstaller --onefile $FILE
 ```
