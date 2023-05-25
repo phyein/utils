@@ -1,31 +1,31 @@
-import logging as log
+import logging
 import pandas as pd
-from typing import Union
-
-# setup logging
-import logging as log
-import logging.config
 import tomllib as toml
-with open('log_config.toml', mode='rb') as logfile:
-    log_cfg = toml.load(logfile)
-logging.config.dictConfig(log_cfg)
 
-def main():
-    '''Main loop. Execute for direct module call but not import.'''
-    pass
+
+def main(): pass
 if __name__ == '__main__': main()
+
+
+def init_logger() -> None:
+    '''Initialize logger.'''
+
+    with open('logging.toml', mode='rb') as logfile:
+        log_config = toml.load(logfile)
+
+    logging.config.dictConfig(log_config)
 
 def get_credentials(env_var: str = None) -> tuple:
     '''
     Get user credentials via the following methods:
 
-    ENVIRONMENT VARIABLE (RECOMMENDED)
+    ENVIRONMENT VARIABLE
         get_credentials(env_var='VARIABLE') reads an environment variable.
         The variable must be formatted as a Python dictionary:
             "{'username': 'YOUR_USERNAME', 'password': 'YOUR_PASSWORD'}"
 
-    MANUAL AUTHENTICATION
-        If authentication method not specified or fails user
+    MANUAL
+        If authentication fails for any reason, user
         will be prompted to manually input credentials.
     '''
 
@@ -35,7 +35,7 @@ def get_credentials(env_var: str = None) -> tuple:
 
     try:
         # ENVIRONMENT VARIABLE AUTHENTICATION
-        uid, key = literal_eval(getenv(env_var))
+        uid, key = literal_eval(getenv(env_var)).values()
         log.info('Credentials from environment variable.')
 
     except:
@@ -47,31 +47,26 @@ def get_credentials(env_var: str = None) -> tuple:
     return (uid, key)
 
 def to_dict(
-    series: Union[dict, float, int, list, set, tuple], 
-    length: int=None
-    ) -> dict:
-    '''
-    Convert series of values to type dict.
-    If series is instance of int or float, length must be specified.
-    '''
-    
+    series: dict | float | int | list | set | tuple,
+    length: int = None
+) -> dict:
+    '''Convert value(s) to type dict.'''
+
     if   isinstance(series, (dict)):
         return series
-    
+
     elif isinstance(series, (int, float)):
         # interpret input as mean of series
         return {i + 1: series for i in range(length)}
-    
+
     elif isinstance(series, (list, set, tuple)):
         return {i + 1: item for i, item in enumerate(series)}
-    
+
     else:
         raise Exception(f'Invalid type: {type(series)}')
 
-def prompt_choice(options: Union[dict, list, set, tuple]) -> tuple:
-    '''
-    Presents multiple choice prompt to user.
-    '''
+def prompt_choice(options: dict | list | set | tuple) -> tuple:
+    '''Presents multiple choice prompt to user.'''
 
     # convert all keys, values to dictionary of strings
     options = to_dict(options)
@@ -79,15 +74,15 @@ def prompt_choice(options: Union[dict, list, set, tuple]) -> tuple:
 
     # prompt user
     while True:
-        print('Selection: ')
+        print('Select: ')
         for key, value in options.items():
             print(f'{key}. {value}')
-        
+
         print('----------------')
-        
+
         # input() waits until user presses 'enter'
         choice = str(input())
-        
+
         if choice in options.keys(): break
         if choice == 'exit': return 'exit'
         else: print('\nInvalid. Retry or input "exit" to exit.')
@@ -96,14 +91,12 @@ def prompt_choice(options: Union[dict, list, set, tuple]) -> tuple:
 
 def indicate_progress(i: int, total: int) -> None:
     '''Put this inside of an iterator.'''
-    
+
     print(f'{100 * i // total}%', end='\r')
 
 def infer_dtypes(table: pd.DataFrame) -> pd.DataFrame:
-    '''
-    Infers data types for dataframes whose values consist only of strings.
-    '''
-    
+    '''Infer data types for dataframes whose values consist only of strings.'''
+
     return table \
             .replace(to_replace('true', 'True'), value=True) \
             .replace(to_replace('false', 'False'), value=False) \
